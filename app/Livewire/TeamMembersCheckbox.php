@@ -6,35 +6,31 @@ class TeamMembersCheckbox extends Calendar
 {
     public $userOnly;
 
-    public $userTeam;
-
-    public $selectedAll;
-
-    public $selectedTeam;
+    public $allTeamMembersSelected;
 
     public function checkedBox()
     {
-        $this->dispatch('aUserHasBeenSelected', $this->selectedUsers, $this->selectedTeam);
+        $this->dispatch('aUserHasBeenSelected', $this->selectedUsers);
     }
 
     public function allCheckedBox()
     {
-        // dd($this->selectedUsers);
-        if ($this->selectedAll) {
+        if ($this->allTeamMembersSelected) {
+
             $x = 0;
-            foreach ($this->userTeam as $user) {
+
+            foreach ($this->teamMembers as $user) {
+
                 $this->selectedUsers[$x] = "$user->id";
                 $x++;
             }
-            $this->selectedTeam = true;
-
+            
         } else {
-            $this->selectedUsers = [];
-            $this->selectedTeam = false;
-        }
-        $this->dispatch('aUserHasBeenSelected', $this->selectedUsers, $this->selectedTeam);
 
-        // dd($this->selectedUsers);
+            $this->selectedUsers = [];
+        }
+
+        $this->dispatch('aUserHasBeenSelected', $this->selectedUsers);
     }
 
     /**
@@ -44,14 +40,14 @@ class TeamMembersCheckbox extends Calendar
      */
     public function render()
     {
+        if ($this->team != null) {
 
-        if (!$this->team==null) {
-            $this->userTeam = $this->team->users()->where('role', '!=', 1)->get();
-        }
-        else {
-            $this->userOnly= auth()->user();
-        }
+            $this->teamMembers = $this->team->users()->where('role', '!=', 1)->get();
 
+        } else {
+
+            $this->userOnly = auth()->user();
+        }
 
         return view('livewire.team-members-checkbox');
     }
