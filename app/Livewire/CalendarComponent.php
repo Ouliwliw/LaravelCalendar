@@ -3,12 +3,11 @@
 namespace App\Livewire;
 
 use App\Models\Events;
-use App\Models\User;
 use Carbon\Carbon;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class CalendarComponent extends Component
+class CalendarComponent extends Calendar
 {
     public $events;
 
