@@ -2,9 +2,7 @@
 
 namespace App\Livewire;
 
-use Laravel\Jetstream\Http\Livewire\TeamMemberManager;
-
-class TeamMembersCheckbox extends TeamMemberManager
+class TeamMembersCheckbox extends Calendar
 {
     public $selectedUsers = [];
 
