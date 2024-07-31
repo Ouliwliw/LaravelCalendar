@@ -17,8 +17,6 @@ class CalendarComponent extends Calendar
 
     public $calendarUrlUserConnected = '';
 
-    public $team;
-
     public $timezone;
 
     #[On('aUserHasBeenSelected')]

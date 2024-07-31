@@ -8,6 +8,7 @@ class Calendar extends Component
 {
     public $user;
     public $team;
+    public $selectedUsers = [];
 
     public function __construct()
     {

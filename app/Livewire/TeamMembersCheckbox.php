@@ -4,11 +4,7 @@ namespace App\Livewire;
 
 class TeamMembersCheckbox extends Calendar
 {
-    public $selectedUsers = [];
-
     public $userOnly;
-
-    public $team;
 
     public $userTeam;
 
