@@ -6,13 +6,19 @@ use Livewire\Component;
 
 class Calendar extends Component
 {
+    public $user;
+    public $team;
+
+    public function __construct()
+    {
+        $this->user = auth()->user();
+        $this->team = $this->user->currentTeam;
+    }
+    
     public function render()
     {
-        $user = auth()->user();
-        $team = $user->currentTeam;
-
         return view('livewire.calendar')->with([
-            'team' => $team,
+            'team' => $this->team,
         ]);
     }
 }
