@@ -4,38 +4,12 @@ namespace App\Livewire;
 
 use App\Models\Events;
 use Carbon\Carbon;
-use Livewire\Attributes\On;
 
 class CalendarComponent extends Calendar
 {
-    public $events;
-
-    public $allUrlIcsEvents = [];
-
-    public $calendarUrls = [];
-
     public $calendarUrlUserConnected = '';
 
     public $timezone;
-
-    #[On('aUserHasBeenSelected')]
-    public function fetchEvents($selectedUsers)
-    {
-        $authUser = auth()->user();
-
-        if (count($selectedUsers) > 1) {
-            if (! $authUser->isAdminOrModerateur($this->team)) {
-                return abort(403, "Vous n'êtes qu'un utilisateur, vous ne pouvez pas faire ça");
-            }
-        }
-
-        $this->allUrlIcsEvents = [];
-        $this->calendarUrls = [];
-
-        $this->events = json_decode($this->refetchEvents($selectedUsers));
-
-        $this->dispatch('eventsHaveBeenFetched');
-    }
 
     public function status($value)
     {

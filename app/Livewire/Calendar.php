@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Events;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Calendar extends Component
@@ -14,6 +15,12 @@ class Calendar extends Component
     public $teamMembers;
 
     public $selectedUsers = [];
+
+    public $events;
+
+    public $allUrlIcsEvents = [];
+
+    public $calendarUrls = [];
 
     public function __construct()
     {
@@ -43,9 +50,19 @@ class Calendar extends Component
         return $event;
     }
 
-    public function refetchEvents($selectedUsers = null)
+    #[On('aUserHasBeenSelected')]
+    public function refetchEvents($selectedUsers)
     {
+        if (count($selectedUsers) > 1) {
+
+            if (! $this->user->isAdminOrModerateur($this->team)) {
+
+                return abort(403, "Vous n'êtes qu'un utilisateur, vous ne pouvez pas faire ça");
+            }
+        }
+
         if (! $selectedUsers) {
+
             $selectedUsers = [0];
         }
 
@@ -57,7 +74,7 @@ class Calendar extends Component
             $eventQuery->where('user_id', $selectedUser);
             $events = $eventQuery->get();
             $existingsEventsIDs = [];
-            
+
             if ($events) {
 
                 foreach ($events as $event) {
@@ -80,7 +97,11 @@ class Calendar extends Component
             }
         }
 
-        return json_encode($allUsersEvents);
+        $this->events = json_encode($allUsersEvents);
+        
+        $this->events = json_decode($this->events);
+        
+        return $this->dispatch('eventsHaveBeenFetched');
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////
