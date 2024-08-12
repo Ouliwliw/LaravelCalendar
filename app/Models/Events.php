@@ -3,18 +3,15 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use App\Models\User;
-use Ramsey\Uuid\Uuid;
 use GuzzleHttp\Client;
-use App\Models\Calendarobject;
-// use Sabre\CalDAV\CalendarObject;
-use Illuminate\Database\Eloquent\Model;
-use Spatie\IcalendarGenerator\Components\Event;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Spatie\IcalendarGenerator\Properties\TextProperty;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Ramsey\Uuid\Uuid;
 use Spatie\IcalendarGenerator\Components\Calendar as ComponentsCalendar;
+use Spatie\IcalendarGenerator\Components\Event;
+use Spatie\IcalendarGenerator\Properties\TextProperty;
 
 class Events extends Model
 {
@@ -52,17 +49,7 @@ class Events extends Model
         $uri = $uuid.'.ics';
         $ics = $calendarUrl.'/'.$uri;
 
-        // $this->calendarObject()->create([
-        //     'calendar_id' => $this->user()->first()->getCalendarInstance()->id,
-        //     'event_id' => $this->id,
-        //     'last_modified' => $this->updated_at->getTimestamp(),
-        //     'componenttype' => 'VEVENT',
-        //     'uid' => $this->id,
-        //     'calendar_data' => $this->getIcs(),
-
-        // ]);
         $client = new Client();
-        // $url = 'http://localhost/dav/calendars/6fa5bf2dd665bfd42687/lecalendrierdeAdmin/LaraconOnline.ics';
 
         $start = Carbon::parse($this->start);
         $end = Carbon::parse($this->end);
@@ -117,7 +104,6 @@ class Events extends Model
 
     public function modificationEventToICS()
     {
-
         $eventIcs = $this->calendarObject()->first();
         $eventIcs->DELETE();
         $this->createIcs();
@@ -125,7 +111,6 @@ class Events extends Model
 
     public function modificationIcsToEvent()
     {
-
         $eventIcs = $this->calendarObject()->first();
 
         $firstOccurrence = Carbon::createFromTimestamp($eventIcs->firstoccurence)->setTimezone('UTC');
@@ -133,7 +118,7 @@ class Events extends Model
 
         $isMidnightToMidnight = $firstOccurrence->format('H:i:s') === '00:00:00' && $lastOccurrence->format('H:i:s') === '00:00:00';
 
-        $isOneDayDifference = $firstOccurrence->diffInDays($lastOccurrence) == 1.0; ;
+        $isOneDayDifference = $firstOccurrence->diffInDays($lastOccurrence) == 1.0;
 
         if ($isMidnightToMidnight && $isOneDayDifference) {
             $this->is_all_day = true;
@@ -142,7 +127,7 @@ class Events extends Model
         }
         $timestampsOriginal = $this->timestamps;
         $this->timestamps = false;
-        $this->start= Carbon::createFromTimestamp($eventIcs->firstoccurence)->setTimezone('UTC')->toIso8601String();
+        $this->start = Carbon::createFromTimestamp($eventIcs->firstoccurence)->setTimezone('UTC')->toIso8601String();
         $this->end = Carbon::createFromTimestamp($eventIcs->lastoccurence)->setTimezone('UTC')->toIso8601String();
         $this->updated_at = Carbon::createFromTimestamp($eventIcs->lastmodified);
         $this->origin = 'ICS';

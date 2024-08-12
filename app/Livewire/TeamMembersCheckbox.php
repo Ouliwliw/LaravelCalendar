@@ -24,7 +24,7 @@ class TeamMembersCheckbox extends Calendar
                 $this->selectedUsers[$x] = "$user->id";
                 $x++;
             }
-            
+
         } else {
 
             $this->selectedUsers = [];

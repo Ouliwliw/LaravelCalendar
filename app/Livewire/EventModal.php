@@ -29,13 +29,12 @@ class EventModal extends ModalComponent
         $this->form->start = Carbon::parse($start)->format('Y-m-d\TH:i');
         $this->form->end = Carbon::parse($end)->format('Y-m-d\TH:i');
     }
-    
+
     public function save()
     {
         $this->form->store($this->timezone);
         $this->closeModal();
         $arrayUserID = [$this->form->user_id];
-        // $this->dispatch('aUserHasBeenSelected', $arrayUserID); AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     }
 
     public function update()
@@ -43,7 +42,6 @@ class EventModal extends ModalComponent
         $this->form->update($this->timezone);
         $this->closeModal();
         $arrayUserID = [$this->form->user_id];
-        // $this->dispatch('aUserHasBeenSelected', $arrayUserID); AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     }
 
     public function render()

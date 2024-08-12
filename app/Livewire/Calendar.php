@@ -7,8 +7,11 @@ use Livewire\Component;
 class Calendar extends Component
 {
     public $user;
+
     public $team;
+
     public $teamMembers;
+
     public $selectedUsers = [];
 
     public function __construct()
@@ -16,7 +19,7 @@ class Calendar extends Component
         $this->user = auth()->user();
         $this->team = $this->user->currentTeam;
     }
-    
+
     public function render()
     {
         return view('livewire.calendar')->with([

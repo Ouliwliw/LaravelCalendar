@@ -5,7 +5,6 @@ namespace App\Livewire;
 use App\Models\Events;
 use Carbon\Carbon;
 use Livewire\Attributes\On;
-use Livewire\Component;
 
 class CalendarComponent extends Calendar
 {
@@ -25,7 +24,7 @@ class CalendarComponent extends Calendar
         $authUser = auth()->user();
 
         if (count($selectedUsers) > 1) {
-            if (!$authUser->isAdminOrModerateur($this->team)) {
+            if (! $authUser->isAdminOrModerateur($this->team)) {
                 return abort(403, "Vous n'êtes qu'un utilisateur, vous ne pouvez pas faire ça");
             }
         }
@@ -41,7 +40,7 @@ class CalendarComponent extends Calendar
 
     public function status($value)
     {
-        $status = require('app/Tableaux/Status.php');
+        $status = require 'app/Tableaux/Status.php';
 
         return $status[$value];
     }

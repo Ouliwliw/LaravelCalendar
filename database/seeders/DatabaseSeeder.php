@@ -45,9 +45,7 @@ class DatabaseSeeder extends Seeder
 
             $moderateur->createTeamPrincipal('team '.$moderateur->username);
 
-
         }
-
 
         $teams = Team::all();
         foreach ($teams as $team) {

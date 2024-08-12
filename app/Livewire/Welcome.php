@@ -10,7 +10,6 @@ class Welcome extends Component
 
     public function render()
     {
-
         $this->calendarUrl = auth()->user()->getCalendarUrl();
 
         return view('livewire.welcome')->layout('layouts.guest');

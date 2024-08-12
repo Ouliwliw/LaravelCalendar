@@ -3,23 +3,18 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Models\Role;
-use App\Models\Team;
-use App\Models\User;
-use App\Models\TeamUser;
-use App\Models\Principal;
-use Laravel\Jetstream\HasTeams;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Support\Facades\Hash;
-use Laravel\Jetstream\HasProfilePhoto;
-use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
 use App\Http\Services\LaravelSabreCalendarHome;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Jetstream\HasProfilePhoto;
+use Laravel\Jetstream\HasTeams;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -109,21 +104,20 @@ class User extends Authenticatable
     {
         return $this->hasRole('Admin');
     }
-    
+
     public function isAdminOrModerateur($team): bool
     {
 
-        $teamid= $team->id;
-        $userid= $this->id;
+        $teamid = $team->id;
+        $userid = $this->id;
 
-        $teamuser= TeamUser::where('team_id', $teamid)->where('user_id', $userid)->first();
+        $teamuser = TeamUser::where('team_id', $teamid)->where('user_id', $userid)->first();
 
         if ($this->hasRole('Admin') || $teamuser->role == 2) {
             return true;
-        }
-        else {
+        } else {
             return false;
-        };
+        }
     }
 
     public function isLeader($idTeam): bool
@@ -171,7 +165,7 @@ class User extends Authenticatable
         $user->username = $username;
         $user->color = fake()->hexColor;
         $user->password = Hash::make($password);
-        if (!$team == null) {
+        if (! $team == null) {
             $user->save();
             $user->createPrincipal();
             $team = Team::where('name', $team)->first();
@@ -181,21 +175,17 @@ class User extends Authenticatable
             $user->createPrincipal();
         }
 
-
     }
 
-
-        // //Creation User
-        // $user = new User();
-        // $user->name = $name;
-        // $user->username = $username;
-        // $user->email = $email;
-        // $user->password = Hash::make(config('app.password'));
-        // $user->save();
-        // //Creation Principal
-        // $principal = $user->createPrincipal();
-
-
+    // //Creation User
+    // $user = new User();
+    // $user->name = $name;
+    // $user->username = $username;
+    // $user->email = $email;
+    // $user->password = Hash::make(config('app.password'));
+    // $user->save();
+    // //Creation Principal
+    // $principal = $user->createPrincipal();
 
     public function assignTeam($teamId, $roleName)
     {
