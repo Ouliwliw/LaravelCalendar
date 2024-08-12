@@ -32,8 +32,7 @@ class CalendarComponent extends Calendar
         $this->allUrlIcsEvents = [];
         $this->calendarUrls = [];
 
-        $EC = new EventComponent();
-        $this->events = json_decode($EC->refetchEvents($selectedUsers));
+        $this->events = json_decode($this->refetchEvents($selectedUsers));
 
         $this->dispatch('eventsHaveBeenFetched');
     }
