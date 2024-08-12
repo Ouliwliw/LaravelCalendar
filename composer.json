@@ -73,6 +73,12 @@
             "@php ./vendor/bin/pint",
             "@php ./vendor/bin/phpstan analyse",
             "@php ./vendor/bin/pest "
+        ],
+        "seed": [
+            "@php artisan migrate:fresh --seed"
+        ],
+        "ics": [
+            "@php artisan app:verify-database-events-ics"
         ]
     },
     "extra": {
