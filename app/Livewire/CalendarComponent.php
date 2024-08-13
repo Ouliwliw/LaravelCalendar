@@ -60,28 +60,6 @@ class CalendarComponent extends Calendar
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////
-    /// Events ///
-    ////////////////////////////////////////////////////////////////////////////////////////
-
-    public function create($data)
-    {
-        $event = new Events($data);
-        $event->save();
-
-        return $event;
-    }
-
-    public function update($id, $data)
-    {
-
-        $event = Events::find($id);
-        $event->fill($data);
-        $event->save();
-
-        return $event;
-    }
-
     #[On('aUserHasBeenSelected')]
     public function refetchEvents($selectedUsers)
     {

@@ -88,13 +88,11 @@
 
                                 eventResize: function(info) {
                                     @this.updateEvent(info.event.id, info.event.startStr, info.event.endStr);
-                                    // refreshCalendar(Array.from(String(info.event.extendedProps.user_id), Number)); AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
                                 },
 
                                 eventDrop: function(info) {
                                     @this.updateEvent(info.event.id, info.event.startStr, info.event.endStr, info.event
                                         .allDay);
-                                    // refreshCalendar(Array.from(String(info.event.extendedProps.user_id), Number)); AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
                                 },
 
                                 select: function(info) {
