@@ -143,7 +143,7 @@ class CalendarComponent extends Calendar
      */
     public function render()
     {
-        $this->calendarUrlUserConnected = auth()->user()->getCalendarUrl();
+        $this->calendarUrlUserConnected = $this->user->getCalendarUrl();
 
         return view('livewire.calendar-component');
     }
