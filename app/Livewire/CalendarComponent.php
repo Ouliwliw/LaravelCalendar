@@ -4,10 +4,13 @@ namespace App\Livewire;
 
 use App\Models\Events;
 use Carbon\Carbon;
+use Livewire\Attributes\On;
 
 class CalendarComponent extends Calendar
 {
     public $calendarUrlUserConnected = '';
+
+    public $events;
 
     public $timezone;
 
@@ -55,6 +58,82 @@ class CalendarComponent extends Calendar
             $event->title = 'Confidentiel';
             $event->description = "Vous n'avez pas les droits pour voir cet événement";
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////
+    /// Events ///
+    ////////////////////////////////////////////////////////////////////////////////////////
+
+    public function create($data)
+    {
+        $event = new Events($data);
+        $event->save();
+
+        return $event;
+    }
+
+    public function update($id, $data)
+    {
+
+        $event = Events::find($id);
+        $event->fill($data);
+        $event->save();
+
+        return $event;
+    }
+
+    #[On('aUserHasBeenSelected')]
+    public function refetchEvents($selectedUsers)
+    {
+        if (count($selectedUsers) > 1) {
+
+            if (! $this->user->isAdminOrModerateur($this->team)) {
+
+                return abort(403, "Vous n'êtes qu'un utilisateur, vous ne pouvez pas faire ça");
+            }
+        }
+
+        if (! $selectedUsers) {
+
+            $selectedUsers = [0];
+        }
+
+        $allUsersEvents = [];
+
+        foreach ($selectedUsers as $selectedUser) {
+
+            $eventQuery = Events::query();
+            $eventQuery->where('user_id', $selectedUser);
+            $events = $eventQuery->get();
+            $existingsEventsIDs = [];
+
+            if ($events) {
+
+                foreach ($events as $event) {
+
+                    if (! (int) $event['is_all_day']) {
+                        $event['allDay'] = false;
+                        $event['start'] = $event['start'];
+                        $event['end'] = $event['end'];
+                        $event['endDay'] = $event['end'];
+                        $event['startDay'] = $event['start'];
+                    } else {
+                        $event['allDay'] = true;
+                        $event['endDay'] = $event['end'];
+                        $event['end'] = $event['end'];
+                        $event['startDay'] = $event['start'];
+                    }
+                    array_push($allUsersEvents, $event);
+                    array_push($existingsEventsIDs, $event->event_id);
+                }
+            }
+        }
+
+        $this->events = json_encode($allUsersEvents);
+
+        $this->events = json_decode($this->events);
+
+        return $this->dispatch('eventsHaveBeenFetched');
     }
 
     /**
