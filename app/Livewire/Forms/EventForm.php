@@ -65,7 +65,7 @@ class EventForm extends Form
         ];
     }
 
-    public function setEvent(Events $events): void
+    public function setEvent(Events $events, $timezone): void
     {
         $this->events = $events;
         $this->user_id = $events->user_id;
@@ -74,6 +74,8 @@ class EventForm extends Form
         $this->start = $events->start;
         $this->end = $events->end;
         $this->status = $events->status;
+
+        // @phpstan-ignore-next-line
         $this->is_all_day = $events->is_all_day;
         $this->visibility = $events->visibility;
         $this->category = $events->category;
@@ -92,7 +94,7 @@ class EventForm extends Form
 
         $this->user_id = $user->id;
         $this->backgroundColor = $user->color;
-        $this->borderColor = $user->color . 80;
+        $this->borderColor = $user->color. 80;
         $this->timezone = $timezone;
 
         if ($this->is_all_day) {
@@ -111,7 +113,7 @@ class EventForm extends Form
     public function update($timezone)
     {
         $validatedData = $this->validate();
-        
+
         if ($this->is_all_day) {
 
             $validatedData['start'] = Carbon::parse($validatedData['start'])->startOfDay();

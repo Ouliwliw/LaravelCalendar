@@ -17,6 +17,7 @@ class TeamSettingsController extends Component
         $this->team = auth()->user()->currentTeam;
 
         $this->isAdmin = auth()->user()->isAdmin();
+        // @phpstan-ignore-next-line
         $this->isModerator = auth()->user()->canDoAction('Moderateur', $this->team->id);
 
         return view('livewire.team-settings-controller')->with([

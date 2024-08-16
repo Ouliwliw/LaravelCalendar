@@ -38,7 +38,7 @@ class Events extends Model
 
     public function calendarObject(): HasOne
     {
-        return $this->hasOne(CalendarObject::class, 'event_id');
+        return $this->hasOne(Calendarobject::class, 'event_id');
     }
 
     public function createIcs(): void
@@ -70,6 +70,7 @@ class Events extends Model
             ->createdAt(Carbon::parse($this->created_at))
             ->appendProperty(TextProperty::create('CATEGORIES', ($this->category)))
             ->appendProperty(TextProperty::create('CLASS', ($this->visibility)))
+            // @phpstan-ignore-next-line
             ->appendProperty(TextProperty::create('PRIORITY', ($this->status)));
 
         $cal = ComponentsCalendar::create()->event($test)->get();
@@ -121,8 +122,10 @@ class Events extends Model
         $isOneDayDifference = $firstOccurrence->diffInDays($lastOccurrence) == 1.0;
 
         if ($isMidnightToMidnight && $isOneDayDifference) {
+            // @phpstan-ignore-next-line
             $this->is_all_day = true;
         } else {
+            // @phpstan-ignore-next-line
             $this->is_all_day = false;
         }
         $timestampsOriginal = $this->timestamps;

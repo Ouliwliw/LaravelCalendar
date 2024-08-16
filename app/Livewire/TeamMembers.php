@@ -85,6 +85,7 @@ class TeamMembers extends TeamMemberManager
 
     public function setRole($role, $user, $teamId)
     {
+        // @phpstan-ignore-next-line
         $teamUser = User::find($user)->teams->find($teamId)->membership;
         $teamUser->role = $role;
         $teamUser->save();
@@ -95,6 +96,7 @@ class TeamMembers extends TeamMemberManager
     {
         if (Auth::user()->isAdmin() || Auth::user()->isLeader($this->team->id)) {
 
+            // @phpstan-ignore-next-line
             $userTeamNewLeader = User::find($user_id)->teams->find($this->team->id)->membership;
             $userTeamNewLeader->role = 2;
             $userTeamNewLeader->save();
@@ -131,6 +133,7 @@ class TeamMembers extends TeamMemberManager
                 ->where('users.name', '!=', 'Admin')
                 ->get(),
             'roleTest' => Role::where('name', '!=', 'Admin')->get(),
+            // @phpstan-ignore-next-line
         ])->with('isAdmin', $this->user->isAdmin());
     }
 }

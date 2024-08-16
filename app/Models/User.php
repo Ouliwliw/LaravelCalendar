@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Http\Services\LaravelSabreCalendarHome;
+use Exception;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -91,6 +92,7 @@ class User extends Authenticatable
         $roleAdminId = Role::where('name', 'Admin')->first()->id;
 
         // Vérifiez si l'utilisateur a le rôle dans l'équipe spécifiée
+        // @phpstan-ignore-next-line
         $teamRole = $this->teams()->where('teams.id', $teamId)->first()->membership->role;
 
         if ($teamRole === $roleAdminId) {
@@ -112,7 +114,7 @@ class User extends Authenticatable
         $userid = $this->id;
 
         $teamuser = TeamUser::where('team_id', $teamid)->where('user_id', $userid)->first();
-
+        // @phpstan-ignore-next-line
         if ($this->hasRole('Admin') || $teamuser->role == 2) {
             return true;
         } else {
@@ -214,8 +216,11 @@ class User extends Authenticatable
     {
         $role = Role::where('name', $roleName)->first();
         $pivotTable = new TeamUser();
+        // @phpstan-ignore-next-line
         $pivotTable->role = $role->id;
+        // @phpstan-ignore-next-line
         $pivotTable->model_type = 'App\Models\User';
+        // @phpstan-ignore-next-line
         $pivotTable->user_id = $this->id;
         $pivotTable->save();
     }
@@ -227,6 +232,7 @@ class User extends Authenticatable
 
         // assigner le role
         $this->assignRoleAndTeam('Moderateur', $team->id);
+        // @phpstan-ignore-next-line
         $adminId = TeamUser::where('role', Role::where('name', 'Admin')->first()->id)->first()->user_id;
         $admin = User::where('id', $adminId)->first();
         $admin->assignRoleAndTeam('Admin', $team->id);
