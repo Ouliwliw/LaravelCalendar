@@ -105,7 +105,7 @@ class User extends Authenticatable
         return $this->hasRole('Admin');
     }
 
-    public function isAdminOrModerateur($team): bool
+    public function isAdminOrModerator($team): bool
     {
 
         $teamid = $team->id;
@@ -174,18 +174,7 @@ class User extends Authenticatable
             $user->save();
             $user->createPrincipal();
         }
-
     }
-
-    // //Creation User
-    // $user = new User();
-    // $user->name = $name;
-    // $user->username = $username;
-    // $user->email = $email;
-    // $user->password = Hash::make(config('app.password'));
-    // $user->save();
-    // //Creation Principal
-    // $principal = $user->createPrincipal();
 
     public function assignTeam($teamId, $roleName)
     {
@@ -219,7 +208,6 @@ class User extends Authenticatable
         $this->calendar_id = intval($calendarId[0]);
 
         $this->save();
-
     }
 
     public function assignJustRole($roleName)
@@ -242,7 +230,6 @@ class User extends Authenticatable
         $adminId = TeamUser::where('role', Role::where('name', 'Admin')->first()->id)->first()->user_id;
         $admin = User::where('id', $adminId)->first();
         $admin->assignRoleAndTeam('Admin', $team->id);
-
     }
 
     public function joinTeam($nameRole, $teamId)

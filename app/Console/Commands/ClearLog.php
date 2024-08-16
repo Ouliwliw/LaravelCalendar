@@ -29,5 +29,7 @@ class ClearLog extends Command
     {
         exec('echo "" > '.storage_path('logs/laravel.log'));
         $this->info('Logs have been cleared');
+
+        return 0;
     }
 }

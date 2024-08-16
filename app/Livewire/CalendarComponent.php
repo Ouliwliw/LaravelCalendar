@@ -65,7 +65,7 @@ class CalendarComponent extends Calendar
     {
         if (count($selectedUsers) > 1) {
 
-            if (! $this->user->isAdminOrModerateur($this->team)) {
+            if (! $this->user->isAdminOrModerator($this->team)) {
 
                 return abort(403, "Vous n'êtes qu'un utilisateur, vous ne pouvez pas faire ça");
             }
@@ -85,25 +85,22 @@ class CalendarComponent extends Calendar
             $events = $eventQuery->get();
             $existingsEventsIDs = [];
 
-            if ($events) {
+            foreach ($events as $event) {
 
-                foreach ($events as $event) {
-
-                    if (! (int) $event['is_all_day']) {
-                        $event['allDay'] = false;
-                        $event['start'] = $event['start'];
-                        $event['end'] = $event['end'];
-                        $event['endDay'] = $event['end'];
-                        $event['startDay'] = $event['start'];
-                    } else {
-                        $event['allDay'] = true;
-                        $event['endDay'] = $event['end'];
-                        $event['end'] = $event['end'];
-                        $event['startDay'] = $event['start'];
-                    }
-                    array_push($allUsersEvents, $event);
-                    array_push($existingsEventsIDs, $event->event_id);
+                if (! (int) $event['is_all_day']) {
+                    $event['allDay'] = false;
+                    $event['start'] = $event['start'];
+                    $event['end'] = $event['end'];
+                    $event['endDay'] = $event['end'];
+                    $event['startDay'] = $event['start'];
+                } else {
+                    $event['allDay'] = true;
+                    $event['endDay'] = $event['end'];
+                    $event['end'] = $event['end'];
+                    $event['startDay'] = $event['start'];
                 }
+                array_push($allUsersEvents, $event);
+                array_push($existingsEventsIDs, $event->event_id);
             }
         }
 
@@ -114,11 +111,6 @@ class CalendarComponent extends Calendar
         return $this->dispatch('eventsHaveBeenFetched');
     }
 
-    /**
-     * Write code on Method
-     *
-     * @return response()
-     */
     public function render()
     {
         $this->calendarUrlUserConnected = $this->user->getCalendarUrl();

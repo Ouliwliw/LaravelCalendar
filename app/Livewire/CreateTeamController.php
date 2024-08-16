@@ -89,6 +89,8 @@ class CreateTeamController extends CreateTeamForm
                     'Admin'
                 )->get(),
             ]);
+        } else {
+            return view('livewire.dashboard');
         }
     }
 }

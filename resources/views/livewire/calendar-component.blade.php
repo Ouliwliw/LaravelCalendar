@@ -139,18 +139,11 @@
 
                             setInterval(function() {
                                 calendar.refetchEvents();
-                                // refreshCalendar({{ auth()->user()->id }}); AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
                             }, 30 * 1000);
 
                             function fetchJSONEvents() {
                                 return @this.events;
                             }
-
-                            // function refreshCalendar() { AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-                            //     Livewire.dispatch("aUserHasBeenSelected", { 
-                            //         selectedUsers: [1]
-                            //     });
-                            // }
                         });
                     </script>
                 </div>

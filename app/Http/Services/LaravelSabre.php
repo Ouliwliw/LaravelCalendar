@@ -5,7 +5,7 @@ namespace App\Http\Services;
 use App\Exception\InvalidStateException;
 use Closure;
 
-class LaravelSabre
+final class LaravelSabre
 {
     /**
      * The collection of node to use with the sabre server.
@@ -29,17 +29,77 @@ class LaravelSabre
     private static $auth;
 
     /**
+     * Get the nodes property.
+     *
+     * @return array|\Sabre\DAV\Tree|\Sabre\DAV\INode|\Closure|null
+     */
+    public static function getNodesProperty()
+    {
+        return self::$nodes;
+    }
+
+    /**
+     * Set the nodes property.
+     *
+     * @param  array|\Sabre\DAV\Tree|\Sabre\DAV\INode|\Closure|null  $nodes
+     */
+    public static function setNodesProperty($nodes): void
+    {
+        self::$nodes = $nodes;
+    }
+
+    /**
+     * Get the auth property.
+     *
+     * @return null|\Closure
+     */
+    public static function getAuthProperty()
+    {
+        return self::$auth;
+    }
+
+    /**
+     * Set the auth property.
+     *
+     * @param  null|\Closure  $auth
+     */
+    public static function setAuthProperty($auth): void
+    {
+        self::$auth = $auth;
+    }
+
+    /**
+     * Get the plugins property.
+     *
+     * @return array|\Closure|null
+     */
+    public static function getPluginsProperty()
+    {
+        return self::$plugins;
+    }
+
+    /**
+     * Set the plugins property.
+     *
+     * @param  array|\Closure|null  $plugins
+     */
+    public static function setPluginsProperty($plugins): void
+    {
+        self::$plugins = $plugins;
+    }
+
+    /**
      * Returns list of nodes to create the sabre collection.
      *
      * @return array|\Sabre\DAV\Tree|\Sabre\DAV\INode|null
      */
     public static function getNodes()
     {
-        if (static::$nodes instanceof Closure) {
-            return (static::$nodes)();
+        if (self::getNodesProperty() instanceof Closure) {
+            return (self::getNodesProperty())();
         }
 
-        return static::$nodes;
+        return self::getNodesProperty();
     }
 
     /**
@@ -53,12 +113,12 @@ class LaravelSabre
         if ($nodes instanceof Closure ||
             $nodes instanceof \Sabre\DAV\Tree ||
             $nodes instanceof \Sabre\DAV\INode) {
-            static::$nodes = $nodes;
+            self::setNodesProperty($nodes);
         } else {
-            static::$nodes = collect($nodes)->toArray();
+            self::setNodesProperty(collect($nodes)->toArray());
         }
 
-        return new static;
+        return new self;
     }
 
     /**
@@ -68,11 +128,11 @@ class LaravelSabre
      */
     public static function getPlugins()
     {
-        if (static::$plugins instanceof Closure) {
-            return (static::$plugins)();
+        if (self::getPluginsProperty() instanceof Closure) {
+            return (self::getPluginsProperty())();
         }
 
-        return static::$plugins;
+        return self::getPluginsProperty();
     }
 
     /**
@@ -84,12 +144,12 @@ class LaravelSabre
     public static function plugins($plugins)
     {
         if ($plugins instanceof Closure) {
-            static::$plugins = $plugins;
+            self::setPluginsProperty($plugins);
         } else {
-            static::$plugins = collect($plugins)->toArray();
+            self::setPluginsProperty(collect($plugins)->toArray());
         }
 
-        return new static;
+        return new self;
     }
 
     /**
@@ -102,17 +162,17 @@ class LaravelSabre
      */
     public static function plugin($plugin)
     {
-        if (! isset(static::$plugins)) {
-            static::$plugins = [];
+        if (self::getPluginsProperty() !== null) {
+            self::setPluginsProperty([]);
         }
 
-        if (is_array(static::$plugins)) {
-            static::$plugins[] = $plugin;
+        if (is_array(self::getPluginsProperty())) {
+            self::getPluginsProperty()[] = $plugin;
         } else {
             throw new InvalidStateException('plugins is not an array, impossible to use plugin() function.');
         }
 
-        return new static;
+        return new self;
     }
 
     /**
@@ -122,9 +182,9 @@ class LaravelSabre
      */
     public static function auth(Closure $callback)
     {
-        static::$auth = $callback;
+        self::setAuthProperty($callback);
 
-        return new static;
+        return new self;
     }
 
     /**
@@ -135,7 +195,7 @@ class LaravelSabre
      */
     public static function check($request)
     {
-        return (static::$auth ?? function (): bool {
+        return (self::getAuthProperty() ?? function (): bool {
             return true;
         })($request);
     }
@@ -147,8 +207,8 @@ class LaravelSabre
      */
     public static function clear()
     {
-        static::$nodes = [];
-        static::$plugins = [];
-        static::$auth = null;
+        self::setNodesProperty([]);
+        self::setPluginsProperty([]);
+        self::setAuthProperty(null);
     }
 }

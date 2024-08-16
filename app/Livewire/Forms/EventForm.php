@@ -84,17 +84,23 @@ class EventForm extends Form
     public function store($timezone): void
     {
         $user = auth()->user();
-        $startIfAllDay = Carbon::parse($this->start, $timezone);
-        $endIfAllDay = Carbon::parse($this->end, $timezone);
+        $parsedStartWithTimeZone = Carbon::parse($this->start, $timezone);
+        $parsedEndWithTimeZone = Carbon::parse($this->end, $timezone);
+
+        $parsedStartIfFullDay = Carbon::parse($this->start);
+        $parsedEndIfFullDay = Carbon::parse($this->end);
 
         $this->user_id = $user->id;
         $this->backgroundColor = $user->color;
-        $this->borderColor = $user->color. 80;
+        $this->borderColor = $user->color . 80;
         $this->timezone = $timezone;
 
         if ($this->is_all_day) {
-            $this->start = $startIfAllDay->startOfDay()->setTimezone('UTC')->setTime(0, 0)->toIso8601String();
-            $this->end = $endIfAllDay->startOfDay()->addDay()->setTimezone('UTC')->setTime(0, 0)->toIso8601String();
+            $this->start = $parsedStartIfFullDay->startOfDay();
+            $this->end = $parsedEndIfFullDay->endOfDay();
+        } else {
+            $this->start = $parsedStartWithTimeZone->setTimezone('UTC')->toIso8601String();
+            $this->end = $parsedEndWithTimeZone->setTimezone('UTC')->toIso8601String();
         }
 
         $validatedData = $this->validate();
@@ -105,8 +111,17 @@ class EventForm extends Form
     public function update($timezone)
     {
         $validatedData = $this->validate();
-        $validatedData['start'] = Carbon::parse($validatedData['start'], $timezone)->setTimezone('UTC')->toIso8601String();
-        $validatedData['end'] = Carbon::parse($validatedData['end'], $timezone)->setTimezone('UTC')->toIso8601String();
+        
+        if ($this->is_all_day) {
+
+            $validatedData['start'] = Carbon::parse($validatedData['start'])->startOfDay();
+            $validatedData['end'] = Carbon::parse($validatedData['end'])->endOfDay();
+        } else {
+
+            $validatedData['start'] = Carbon::parse($validatedData['start'], $timezone)->setTimezone('UTC')->toIso8601String();
+            $validatedData['end'] = Carbon::parse($validatedData['end'], $timezone)->setTimezone('UTC')->toIso8601String();
+        }
+
         $this->events->update($validatedData);
     }
 }

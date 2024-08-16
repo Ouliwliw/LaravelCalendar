@@ -18,7 +18,7 @@
                         <div class="flex items-center justify-between">
 
                             <div class="flex items-center">
-                                @if ($this->user->isAdminOrModerateur($team))
+                                @if ($this->user->isAdminOrModerator($team))
                                     <div class="ms-4">
                                         Tous
                                     </div>
@@ -30,7 +30,7 @@
 
                             </div>
                             <div class="flex items">
-                                @if ($this->user->isAdminOrModerateur($team))
+                                @if ($this->user->isAdminOrModerator($team))
                                     <input type="checkbox" wire:model="allTeamMembersSelected"
                                         wire:click="allCheckedBox()"
                                         class="form-checkbox h-5 w-5 transition duration-100 ease-in-out"
@@ -59,11 +59,11 @@
                                 </div>
                                 <div class="flex items ms-2">
                                     {{-- <label for="">{{ $user->id }}</label> --}}
-                                    @isAdminOrModerateur($team)
+                                    @isAdminOrModerator($team)
                                     <input type="checkbox" wire:model="selectedUsers" value="{{ $user->id }}"
                                         wire:click="checkedBox()" class="form-checkbox h-5 w-5"
                                         style="color: {{ $user->color }}" />
-                                    @endisAdminOrModerateur()
+                                    @endisAdminOrModerator()
                                 </div>
                             </div>
                         @endforeach

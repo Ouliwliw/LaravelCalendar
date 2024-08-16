@@ -35,7 +35,7 @@ class CreateUserController extends Component
     public function mount()
     {
         $this->teams = Team::all();
-        $this->roles = Role::all()->where('id', '!=', '1');
+        $this->roles = Role::query()->where('id', '!=', '1')->get();
 
         $user = auth()->user();
         if (! $user->hasRole('Admin')) {
